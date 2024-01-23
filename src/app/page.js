@@ -7,8 +7,8 @@ import { useEffect, useState } from 'react';
 const Home = () => {
   const [productName, setProductName] = useState('');
   const [productCategory, setProductCategory] = useState('');
-  const [scrapedData, setScrapedData] = useState([]);
-  const [responseMessage, setResponseMessage] = useState('');
+  const [scrapedData1, setScrapedData1] = useState([]);
+  const [responseMessage1, setResponseMessage1] = useState('');
   const [loading, setLoading] = useState(false);
 
 
@@ -17,7 +17,7 @@ const Home = () => {
 
     try {
       setLoading(true);
-      const response = await fetch('http://localhost:5000/api/home/amazon', {
+      const response1 = await fetch('http://localhost:5000/api/home/amazon', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -28,11 +28,11 @@ const Home = () => {
         }),
       });
 
-      const data = await response.json();
-      console.log('Received data:', data);
+      const data1 = await response1.json();
+      console.log('Received data:', data1);
   
-      setScrapedData(data.data || []);
-      setResponseMessage(data.message || '');
+      setScrapedData1(data1.data || []);
+      setResponseMessage1(data1.message || '');
       setLoading(false);
     } catch (error) {
       console.error('Error submitting data:', error);
@@ -77,13 +77,13 @@ const Home = () => {
         >
         Scrape
       </button>
-    <p className="mt-3 mx-auto text-center text-green-500">{loading ? <Loader /> : responseMessage}</p>
+    <p className="mt-3 mx-auto text-center text-green-500">{loading ? <Loader /> : responseMessage1}</p>
     </form>
 
   </div>
 
   <div className="flex flex-wrap -mx-2 ">
-      {scrapedData.map((item, index) => (
+      {scrapedData1.map((item, index) => (
         <Card
           key={index}
           title={item.title}
