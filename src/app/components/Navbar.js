@@ -2,6 +2,8 @@
 // components/Navbar.js
 import React from 'react';
 
+import Link from 'next/link';
+
 
 const Navbar = () => {
   return (
@@ -16,7 +18,9 @@ const Navbar = () => {
       {/* Title */}
       {/* Links */}
       <div className="flex items-center space-x-4 text-white">
-        <a href="/about">About</a>
+      <Link  href="../About">
+          About
+        </Link>
         <a href="/contact">Contact</a>
       </div>
     </nav>

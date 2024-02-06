@@ -6,10 +6,16 @@ import { useEffect, useState } from 'react';
 
 const Home = () => {
   const [productName, setProductName] = useState('');
-  const [productCategory, setProductCategory] = useState('');
-  const [scrapedData1, setScrapedData1] = useState([]);
+  const [productCategory, setProductCategory] = useState(''); 
+
+  const [scrapedData1, setScrapedData1] = useState([]); 
+  const [scrapedData2, setScrapedData2] = useState([]);
+  const [currentScrapedData, setCurrentScrapedData] = useState([]);
+
   const [responseMessage1, setResponseMessage1] = useState('');
+  const [responseMessage2, setResponseMessage2] = useState('');
   const [loading, setLoading] = useState(false);
+  const [source ,setSource] = useState("");
 
 
   const handleSubmit = async (e) => {
@@ -35,18 +41,52 @@ const Home = () => {
       setResponseMessage1(data1.message || '');
       setLoading(false);
     } catch (error) {
-      console.error('Error submitting data:', error);
+      console.error('Error submitting data1:', error);
     }
+
+    // FoR FLIPKART 
+    try {
+      setLoading(true);
+      const response2 = await fetch('http://localhost:5000/api/home/flipkart', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          product_name: productName,
+          product_category: productCategory,
+        }),
+      });
+
+      const data2 = await response2.json();
+      console.log('Received data:', data2);
+  
+      setScrapedData2(data2.data || []);
+      setResponseMessage2(data2.message || '');
+      setLoading(false);
+    } catch (error) {
+      console.error('Error submitting data2:', error);
+    }
+
   };
 
-  // Add a useEffect hook to run on the client side
-  useEffect(() => {
-    // Your client-side logic can go here
-  }, []);
+  const handleDisplayAmazonData = () => {
+    setCurrentScrapedData(scrapedData1);
+    setSource("amazon");
+  };
+
+  const handleDisplayFlipkartData = () => {
+    setCurrentScrapedData(scrapedData2);
+    setSource("flipkart");
+  };
+
+  // // Add a useEffect hook to run on the client side
+  // useEffect(() => {
+  //   // Your client-side logic can go here
+  // }, []);
 
   return (
     <>
-
       <Navbar/>
     <h1 className="text-3xl font-bold mb-0 text-center mt-24 text-white">CrawlNCompare:</h1>
     <h1 className="text-2xl font-bold mb-8  mx-auto px-8 text-center mt-2 text-white"> Navigating the Shopping Seas for Your Ultimate Comparison Experience</h1>
@@ -82,17 +122,29 @@ const Home = () => {
 
   </div>
 
-  <div className="flex flex-wrap -mx-2 ">
-      {scrapedData1.map((item, index) => (
-        <Card
-          key={index}
-          title={item.title}
-          price={item.price}
-          imageLink={item.image_link}
-          linkToProduct={item.link_to_product}
-        />
-      ))}
+  <div className="flex flex-wrap justify-center mb-4 ">
+        <button onClick={handleDisplayAmazonData} className="bg-none hover:border-b-2 border-solid border-blue-500 duration-100 text-white font-bold py-2 px-20 rounded mx-0 focus:bg-blue-600">
+           Amazon 
+        </button>
+        <button onClick={handleDisplayFlipkartData} className="bg-none active: hover:border-b-2 border-solid border-yellow-500 duration-100 text-white font-bold py-2 px-20 rounded mx-0 focus:bg-yellow-600 ">
+           Flipkart 
+        </button>
+      </div>
+    <div className="max-w-screen-2xl  my-4 mx-4">
+      <div className="flex flex-wrap justify-center">
+        {currentScrapedData.map((item, index) => (
+          <Card
+            key={index}
+            title={item.title}
+            price={item.price}
+            imageLink={item.image_link}
+            linkToProduct={item.link_to_product}
+            Source={source}
+          />
+        ))}
+      </div>
     </div>
+
         </>
   );
 };

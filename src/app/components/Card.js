@@ -3,12 +3,16 @@
 // components/Card.js
 import React from 'react';
 
-const Card = ({ title, price, imageLink, linkToProduct }) => {
+const Card = ({ title, price, imageLink, linkToProduct ,Source}) => {
   const handleLinkClick = () => {
-    if (linkToProduct) {
+    if (linkToProduct && Source ==='amazon') {
       // Construct the Amazon URL and open it in a new tab
       const amazonUrl = `https://www.amazon.in${linkToProduct}`;
       window.open(amazonUrl, '_blank');
+    }
+    else if(linkToProduct && Source ==='flipkart'){
+      const flipkartUrl = `https://www.flipkart.com${linkToProduct}`;
+      window.open(flipkartUrl, '_blank');
     }
   };
 
@@ -34,3 +38,5 @@ const Card = ({ title, price, imageLink, linkToProduct }) => {
 };
 
 export default Card;
+
+
